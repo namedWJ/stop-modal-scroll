@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>移动端阻止弹窗点击穿透</title>
-    <!-- <link rel="stylesheet/less" type="text/css" href="./index.less" /> -->
     <style>
         * {
             padding: 0;
@@ -71,7 +70,6 @@
             display: none;
         }
     </style>
-    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/3.7.1/less.min.js" ></script> -->
 </head>
 <body>
     <ul class="list"></ul>
@@ -86,17 +84,19 @@
 <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
 <script>
     // 阻止弹窗事件穿透
-    let scrollToTop;
+    var scrollToTop;
+    // 兼容低版本安卓
+    var rootElement = document.scrollingElement || document.body;
     // 点击弹窗弹窗调用该方法
-    let afterOpen = () => {
-        scrollToTop = document.scrollingElement.scrollTop;
+    var afterOpen = function() {
+        scrollToTop = rootElement.scrollTop;
         document.body.classList.add('modal-open');
         document.body.style.top = `${-scrollToTop}px`;
     };
     // 关闭的时候嗲用
-    let beforeClose = () => {
+    var beforeClose = function() {
         document.body.classList.remove('modal-open');
-        document.scrollingElement.scrollTop = scrollToTop;
+        rootElement.scrollTop = scrollToTop;
     };
     for (var a = 0; a < 20; a++) {
         $('.list').append('<li class="item J_item">我是可以滚动的列，点击我唤出弹窗吧</li>');
