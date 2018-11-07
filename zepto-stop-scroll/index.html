@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>移动端阻止弹窗点击穿透</title>
+    <!-- <link rel="stylesheet/less" type="text/css" href="./index.less" /> -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .item {
+            box-sizing: border-box;
+            padding-left: 24px;
+            width: 100%;
+            height: 64px;
+            border-bottom: 1px solid rgba(0, 0, 0, .08);
+            list-style: none;
+            line-height: 64px;
+        }
+        .modal {
+            position: fixed;
+            z-index: 9;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, .6);
+        }
+        .container {
+            position: absolute;
+            box-sizing: border-box;
+            padding: 24px;
+            width: 300px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 8px;
+        }
+        .title {
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .tips {
+            padding-top: 6px;
+            font-size: 16px;
+        }
+        .close {
+            margin-top: 12px;
+            width: 100%;
+            height: 44px;
+            background-color: #E31436;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+            color: #fff;
+            line-height: 44px;
+        }
+        .modal-open {
+            position: fixed;
+            width: 100%;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/3.7.1/less.min.js" ></script> -->
+</head>
+<body>
+    <ul class="list"></ul>
+    <div class="modal J_modal hidden">
+        <div class="container">
+            <p class="title">提示</p>
+            <p class="tips">少年，看你骨骼惊奇，快给个star吧</p>
+            <button class="close J_colse">确认</button>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+<script>
+    // 阻止弹窗事件穿透
+    let scrollToTop;
+    // 点击弹窗弹窗调用该方法
+    let afterOpen = () => {
+        scrollToTop = document.scrollingElement.scrollTop;
+        document.body.classList.add('modal-open');
+        document.body.style.top = `${-scrollToTop}px`;
+    };
+    // 关闭的时候嗲用
+    let beforeClose = () => {
+        document.body.classList.remove('modal-open');
+        document.scrollingElement.scrollTop = scrollToTop;
+    };
+    for (var a = 0; a < 20; a++) {
+        $('.list').append('<li class="item J_item">我是可以滚动的列，点击我唤出弹窗吧</li>');
+    }
+    $('.J_item').on('click', () => {
+        $('.J_modal').removeClass('hidden');
+        afterOpen();
+    });
+    $('.J_colse').on('click', () => {
+        $('.J_modal').addClass('hidden');
+        beforeClose();
+    })
+</script>
+</html>
